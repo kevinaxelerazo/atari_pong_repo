@@ -76,3 +76,14 @@ class Pelota(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect(self, raqueta_izq) or pygame.sprite.collide_rect(self, raqueta_der):
             self.velocidad_x *= -1 #Velocidad invertida unicamente por ahora, se pretende levantar logica de incremento en 5% cuando choque con raquetas en movimiento
 
+    def reiniciar_pelota(self):
+        #Posición inicial en el centro de la pantalla
+        self.rect.centerx = self.x_inicial
+        self.rect.centery = self.y_inicial
+        self.vel_baja = 3
+        opciones = [self.vel_baja, -self.vel_baja]
+        self.velocidad_x = random.choice(opciones)
+        self.velocidad_y = random.choice(opciones)
+
+
+

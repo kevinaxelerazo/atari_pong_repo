@@ -1,5 +1,8 @@
 import pygame
+import os
 from clases import Raqueta, Pelota
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 #pygame setup
 pygame.init()
@@ -19,6 +22,11 @@ pelota = Pelota (ANCHO //2, ALTO //2)
 todos_los_sprites = pygame.sprite.Group()
 todos_los_sprites.add(raqueta_izq, raqueta_der, pelota)
 
+#Variables de puntajes
+puntaje_1=0
+puntaje_2=0
+fuente = pygame.font.Font(None, 74)
+
 #bucle principal       
 while running:
     #Ciclo de revisi[on actividad usuario
@@ -31,19 +39,32 @@ while running:
     # Movemos las raquetas pasándole las teclas correspondientes de Pygame
     raqueta_izq.mover_raquetas(pygame.K_w, pygame.K_s, teclas, ALTO)
     raqueta_der.mover_raquetas(pygame.K_UP, pygame.K_DOWN, teclas, ALTO)
-    
+
     # Movemos la pelota y le pasamos las raquetas para que detecte los choques
     pelota.mover_pelota(ALTO, raqueta_izq, raqueta_der)
+    # Si sale por la izquierda (menor a 0), punto para el Jugador 2
+    if pelota.rect.left < 0:
+        puntaje_2 += 1
+        # Aquí llamaríamos a la función para devolverla al centro
+        pelota.reiniciar_pelota() 
+
+    # Si sale por la derecha (mayor al ANCHO), punto para el Jugador 1
+    if pelota.rect.right > ANCHO:
+        puntaje_1 += 1
+        pelota.reiniciar_pelota()
 
 
-    #sDibujado
+    #Dibujado
     screen.fill((0, 0, 0)) #Color del fondo
     todos_los_sprites.draw (screen)
-    #Mostrar los cambios
+    texto_p1 = fuente.render(str(puntaje_1), True, (255, 255, 255))
+    texto_p2 = fuente.render(str(puntaje_2), True, (255, 255, 255))
+    screen.blit(texto_p1, (320, 20))
+    screen.blit(texto_p2, (960, 20))
     pygame.display.flip()
 
-#Control de FPS
-clock.tick(60)
+    #Control de FPS
+    clock.tick(60)
 
 
 
