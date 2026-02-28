@@ -3,7 +3,7 @@ import random
 
 class Raqueta(pygame.sprite.Sprite):
     #Construccion
-    def __init__(self, x_inicial, y_inicial):
+    def __init__(self, x, y):
         super().__init__() #Inicializar clase base de pygame
 
         # Dimensiones
@@ -15,8 +15,13 @@ class Raqueta(pygame.sprite.Sprite):
 
         # Posicion inicial
         self.rect = self.image.get_rect()
-        self.rect.x = x_inicial
-        self.rect.y = y_inicial
+        self.rect.x = x
+        self.rect.y = y
+
+        # Guardamos posicion inicial de raqueta 
+        self.x_inicial = x
+        self.y_inicial = y
+
 
         #Movimiento 
         self.velocidad = 6 #cantidad de pixeles por fotograma
@@ -39,7 +44,17 @@ class Raqueta(pygame.sprite.Sprite):
 
     def reiniciar_posicion(self):
         # Reinicio de Posicion de raqueta en anotacion
+        self.rect.x = self.x_inicial
         self.rect.y = self.y_inicial
+
+    def mover_ia (self, pelota, alto_pantalla):
+        #Usamos el centro de la raqueta para traquear la pelota y subir
+        if self.rect.centery < pelota.rect.centery and self.rect.bottom < alto_pantalla:
+            self.rect.y += self.velocidad
+        #Usamos el centro de la raqueta para traquear la pelota y bajar
+        elif self.rect.centery > pelota.rect.centery and self.rect.top > 0:
+            self.rect.y -= self.velocidad
+
 
 class Pelota(pygame.sprite.Sprite):
     def __init__(self, centro_x, centro_y):
